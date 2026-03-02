@@ -94,7 +94,7 @@ export default function PosPage() {
           </div>
           <h2 className="text-lg font-semibold text-gray-700 mb-2">ยังไม่ได้เปิดรายการขาย</h2>
           <p className="text-gray-400 text-sm">
-            กรุณาไปที่แท็บ &quot;ประวัติ&quot; เพื่อสร้างและเปิดใช้งานรายการขาย
+            กรุณาไปที่แท็บ &quot;งานที่ขาย&quot; เพื่อสร้างและเปิดใช้งานรายการขาย
           </p>
         </div>
       </>
@@ -114,7 +114,22 @@ export default function PosPage() {
         }
       />
 
-      <div className="p-4">
+      <div className="relative p-4">
+        {/* Store Logo Watermark */}
+        {store?.logo_url && (
+          <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
+            <div className="relative w-64 h-64 opacity-[0.06]">
+              <Image
+                src={store.logo_url}
+                alt=""
+                fill
+                className="object-contain"
+                sizes="256px"
+              />
+            </div>
+          </div>
+        )}
+
         {activeProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-mint-100">
@@ -163,7 +178,7 @@ export default function PosPage() {
       {itemCount > 0 && (
         <button
           onClick={() => setShowCart(true)}
-          className="fixed bottom-20 right-4 z-30 flex items-center gap-2 px-5 py-3.5 bg-mint-500 text-white rounded-2xl shadow-lg shadow-mint-500/40 hover:bg-mint-600 transition-all active:scale-95"
+          className="fixed bottom-24 right-4 z-30 flex items-center gap-2 px-5 py-3.5 bg-mint-500 text-white rounded-2xl shadow-lg shadow-mint-500/40 hover:bg-mint-600 transition-all active:scale-95"
         >
           <ShoppingCart size={20} />
           <span className="font-semibold">{formatCurrency(total)}</span>
