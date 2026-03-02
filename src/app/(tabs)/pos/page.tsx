@@ -50,6 +50,15 @@ export default function PosPage() {
     setQuantityModal(null);
   };
 
+  const confirmAndCheckout = () => {
+    if (!quantityModal) return;
+    addItem(quantityModal, quantity);
+    setQuantityModal(null);
+    setShowCheckout(true);
+    setPaymentMethod(null);
+    setPaymentProofUrl(null);
+  };
+
   const handleCheckout = () => {
     setShowCart(false);
     setShowCheckout(true);
@@ -221,13 +230,22 @@ export default function PosPage() {
               </span>
             </div>
 
-            <button
-              onClick={confirmAddToCart}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-mint-500 text-white font-semibold rounded-xl hover:bg-mint-600 transition-colors active:scale-[0.98]"
-            >
-              <ShoppingCart size={18} />
-              <span>เพิ่มลงตะกร้า</span>
-            </button>
+            <div className="space-y-2">
+              <button
+                onClick={confirmAddToCart}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-mint-500 text-white font-semibold rounded-xl hover:bg-mint-600 transition-colors active:scale-[0.98]"
+              >
+                <ShoppingCart size={18} />
+                <span>เพิ่มลงตะกร้า</span>
+              </button>
+              <button
+                onClick={confirmAndCheckout}
+                className="w-full flex items-center justify-center gap-2 py-3 bg-amber-500 text-white font-semibold rounded-xl hover:bg-amber-600 transition-colors active:scale-[0.98]"
+              >
+                <Banknote size={18} />
+                <span>ชำระเงินเลย</span>
+              </button>
+            </div>
           </div>
         )}
       </Modal>
