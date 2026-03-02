@@ -8,10 +8,11 @@ interface HeaderProps {
   title: string;
   showBack?: boolean;
   rightAction?: React.ReactNode;
+  leftContent?: React.ReactNode;
   className?: string;
 }
 
-export function Header({ title, showBack = false, rightAction, className }: HeaderProps) {
+export function Header({ title, showBack = false, rightAction, leftContent, className }: HeaderProps) {
   const router = useRouter();
 
   return (
@@ -29,6 +30,7 @@ export function Header({ title, showBack = false, rightAction, className }: Head
               <ArrowLeft size={22} className="text-gray-600" />
             </button>
           )}
+          {leftContent}
           <h1 className="text-lg font-bold text-gray-800 truncate">{title}</h1>
         </div>
         {rightAction && <div className="flex items-center">{rightAction}</div>}

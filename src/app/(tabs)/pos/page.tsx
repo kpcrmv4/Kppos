@@ -104,7 +104,14 @@ export default function PosPage() {
   return (
     <>
       <Header
-        title="POS ขายสินค้า"
+        title={store?.name || 'POS ขายสินค้า'}
+        leftContent={
+          store?.logo_url ? (
+            <div className="relative h-9 w-9 rounded-full overflow-hidden bg-mint-50 border-2 border-mint-200 flex-shrink-0">
+              <Image src={store.logo_url} alt="" fill className="object-cover" sizes="36px" />
+            </div>
+          ) : undefined
+        }
         rightAction={
           <div className="flex items-center gap-2">
             <span className="text-xs text-mint-600 font-medium bg-mint-50 px-2 py-1 rounded-lg truncate max-w-[120px]">
@@ -114,22 +121,7 @@ export default function PosPage() {
         }
       />
 
-      <div className="relative p-4">
-        {/* Store Logo Watermark */}
-        {store?.logo_url && (
-          <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
-            <div className="relative w-64 h-64 opacity-[0.06]">
-              <Image
-                src={store.logo_url}
-                alt=""
-                fill
-                className="object-contain"
-                sizes="256px"
-              />
-            </div>
-          </div>
-        )}
-
+      <div className="p-4">
         {activeProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-[50vh] text-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-mint-100">
