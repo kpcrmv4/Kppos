@@ -12,13 +12,13 @@ export function useStore() {
   const fetchStore = useCallback(async () => {
     if (typeof window === 'undefined') return;
     setLoading(true);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('stores')
       .select('*')
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (error && error.code === 'PGRST116') {
+    if (!data) {
       // No store exists, create one
       const { data: newStore } = await supabase
         .from('stores')
@@ -26,7 +26,7 @@ export function useStore() {
         .select()
         .single();
       setStore(newStore);
-    } else if (data) {
+    } else {
       setStore(data);
     }
     setLoading(false);
