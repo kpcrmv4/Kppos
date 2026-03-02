@@ -62,7 +62,7 @@ export default function HistoryPage() {
   return (
     <>
       <Header
-        title="ประวัติการขาย"
+        title="งานที่ขาย"
         rightAction={
           <button
             onClick={() => setShowCreate(true)}
@@ -84,7 +84,7 @@ export default function HistoryPage() {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-mint-100">
               <Zap size={28} className="text-mint-500" />
             </div>
-            <p className="text-gray-500 font-medium mb-1">ยังไม่มีรายการขาย</p>
+            <p className="text-gray-500 font-medium mb-1">ยังไม่มีงานที่ขาย</p>
             <p className="text-gray-400 text-sm">กดปุ่ม &quot;สร้างใหม่&quot; เพื่อเริ่มต้น</p>
           </div>
         ) : (
@@ -146,10 +146,10 @@ export default function HistoryPage() {
       </div>
 
       {/* Create Session Modal */}
-      <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="สร้างรายการขายใหม่" size="sm">
+      <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="สร้างงานขายใหม่" size="sm">
         <div className="p-5 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1.5">ชื่อรายการขาย</label>
+            <label className="block text-sm font-medium text-gray-600 mb-1.5">ชื่องานขาย</label>
             <input
               type="text"
               value={newName}
@@ -183,8 +183,8 @@ export default function HistoryPage() {
         isOpen={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
-        title="ลบรายการขาย?"
-        message="รายการขายนี้และข้อมูลทั้งหมดจะถูกลบถาวร ไม่สามารถกู้คืนได้"
+        title="ลบงานขาย?"
+        message="งานขายนี้และข้อมูลทั้งหมดจะถูกลบถาวร ไม่สามารถกู้คืนได้"
         confirmText="ลบ"
         variant="danger"
         loading={deleting}

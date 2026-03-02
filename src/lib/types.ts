@@ -17,9 +17,21 @@ export interface SalesSession {
   updated_at: string;
 }
 
+export interface GlobalProduct {
+  id: string;
+  store_id: string;
+  name: string;
+  price: number;
+  image_url: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: string;
   session_id: string;
+  global_product_id: string | null;
   name: string;
   price: number;
   image_url: string | null;

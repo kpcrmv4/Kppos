@@ -9,7 +9,7 @@ export default function TabsLayout({
 }) {
   return (
     <div className="min-h-screen bg-background">
-      <main className="pb-20 max-w-lg mx-auto">{children}</main>
+      <main className="pb-24 max-w-lg mx-auto">{children}</main>
       <TabBar />
     </div>
   );

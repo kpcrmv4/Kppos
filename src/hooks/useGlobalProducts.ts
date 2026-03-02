@@ -2,29 +2,29 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import type { Product } from '@/lib/types';
+import type { GlobalProduct } from '@/lib/types';
 
-export function useProducts(sessionId: string | undefined) {
+export function useGlobalProducts(storeId: string | undefined) {
   const supabase = useMemo(() => createClient(), []);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<GlobalProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = useCallback(async () => {
-    if (!sessionId) {
+    if (!storeId) {
       setProducts([]);
       setLoading(false);
       return;
     }
     setLoading(true);
     const { data } = await supabase
-      .from('products')
+      .from('global_products')
       .select('*')
-      .eq('session_id', sessionId)
+      .eq('store_id', storeId)
       .order('created_at', { ascending: true });
 
     if (data) setProducts(data);
     setLoading(false);
-  }, [sessionId, supabase]);
+  }, [storeId, supabase]);
 
   useEffect(() => {
     fetchProducts();
@@ -34,13 +34,11 @@ export function useProducts(sessionId: string | undefined) {
     name: string;
     price: number;
     image_url?: string;
-    stock: number;
-    global_product_id?: string;
   }) => {
-    if (!sessionId) return null;
+    if (!storeId) return null;
     const { data, error } = await supabase
-      .from('products')
-      .insert({ ...product, session_id: sessionId })
+      .from('global_products')
+      .insert({ ...product, store_id: storeId })
       .select()
       .single();
 
@@ -50,9 +48,9 @@ export function useProducts(sessionId: string | undefined) {
     return { data, error };
   };
 
-  const updateProduct = async (productId: string, updates: Partial<Product>) => {
+  const updateProduct = async (productId: string, updates: Partial<GlobalProduct>) => {
     const { data, error } = await supabase
-      .from('products')
+      .from('global_products')
       .update(updates)
       .eq('id', productId)
       .select()
@@ -66,7 +64,7 @@ export function useProducts(sessionId: string | undefined) {
 
   const deleteProduct = async (productId: string) => {
     const { error } = await supabase
-      .from('products')
+      .from('global_products')
       .delete()
       .eq('id', productId);
 

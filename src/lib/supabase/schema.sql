@@ -35,11 +35,28 @@ CREATE INDEX idx_sales_sessions_store_id ON sales_sessions(store_id);
 CREATE INDEX idx_sales_sessions_active ON sales_sessions(is_active);
 
 -- =============================================
--- 3. Products table
+-- 3. Global Products table (master catalog)
+-- =============================================
+CREATE TABLE IF NOT EXISTS global_products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  store_id UUID NOT NULL REFERENCES stores(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  price NUMERIC(12,2) NOT NULL DEFAULT 0,
+  image_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_global_products_store_id ON global_products(store_id);
+
+-- =============================================
+-- 4. Products table (per-session instances)
 -- =============================================
 CREATE TABLE IF NOT EXISTS products (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   session_id UUID NOT NULL REFERENCES sales_sessions(id) ON DELETE CASCADE,
+  global_product_id UUID REFERENCES global_products(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   price NUMERIC(12,2) NOT NULL DEFAULT 0,
   image_url TEXT,
@@ -51,7 +68,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE INDEX idx_products_session_id ON products(session_id);
 
 -- =============================================
--- 4. Orders table
+-- 5. Orders table
 -- =============================================
 CREATE TABLE IF NOT EXISTS orders (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -65,7 +82,7 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE INDEX idx_orders_session_id ON orders(session_id);
 
 -- =============================================
--- 5. Order Items table
+-- 6. Order Items table
 -- =============================================
 CREATE TABLE IF NOT EXISTS order_items (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -98,6 +115,10 @@ CREATE TRIGGER update_sales_sessions_updated_at
   BEFORE UPDATE ON sales_sessions
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+CREATE TRIGGER update_global_products_updated_at
+  BEFORE UPDATE ON global_products
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- =============================================
 -- Ensure only one active session per store
 -- =============================================
@@ -124,6 +145,7 @@ CREATE TRIGGER trigger_single_active_session
 -- =============================================
 ALTER TABLE stores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sales_sessions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE global_products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
@@ -131,6 +153,7 @@ ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
 -- Public access policies (no auth required for POS)
 CREATE POLICY "Allow all on stores" ON stores FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on sales_sessions" ON sales_sessions FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all on global_products" ON global_products FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on products" ON products FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on orders" ON orders FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all on order_items" ON order_items FOR ALL USING (true) WITH CHECK (true);
