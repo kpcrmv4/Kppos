@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { ToastContainer } from '@/components/ui/Toast';
+import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased" style={{ fontFamily: 'Kanit, Noto Sans Thai, system-ui, sans-serif' }}>
+        <ServiceWorkerRegister />
         <ToastContainer />
         {children}
       </body>
